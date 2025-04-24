@@ -18,11 +18,11 @@ type GetProductsByCategoryOutput struct {
 
 // GetProductsByCategoryUseCase defines the use case for getting products by category
 type GetProductsByCategoryUseCase struct {
-	productService *product.Service
+	productService *domain.Service
 }
 
 // NewGetProductsByCategoryUseCase creates a new instance of GetProductsByCategoryUseCase
-func NewGetProductsByCategoryUseCase(productService *product.Service) *GetProductsByCategoryUseCase {
+func NewGetProductsByCategoryUseCase(productService *domain.Service) *GetProductsByCategoryUseCase {
 	return &GetProductsByCategoryUseCase{
 		productService: productService,
 	}
@@ -31,7 +31,7 @@ func NewGetProductsByCategoryUseCase(productService *product.Service) *GetProduc
 // Execute runs the use case
 func (uc *GetProductsByCategoryUseCase) Execute(ctx context.Context, input GetProductsByCategoryInput) (*GetProductsByCategoryOutput, error) {
 	// Create value object
-	categoryID, err := product.NewCategoryID(input.CategoryID)
+	categoryID, err := domain.NewCategoryID(input.CategoryID)
 	if err != nil {
 		return nil, err
 	}

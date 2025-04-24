@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/sago-sample/internal/product/domain"
+	domain "sago-sample/internal/product/domain"
 )
 
 // RemoveCategoryFromProductInput represents the input data for removing a category from a product
@@ -26,11 +26,11 @@ type RemoveCategoryFromProductOutput struct {
 
 // RemoveCategoryFromProductUseCase defines the use case for removing a category from a product
 type RemoveCategoryFromProductUseCase struct {
-	productService *product.Service
+	productService *domain.Service
 }
 
 // NewRemoveCategoryFromProductUseCase creates a new instance of RemoveCategoryFromProductUseCase
-func NewRemoveCategoryFromProductUseCase(productService *product.Service) *RemoveCategoryFromProductUseCase {
+func NewRemoveCategoryFromProductUseCase(productService *domain.Service) *RemoveCategoryFromProductUseCase {
 	return &RemoveCategoryFromProductUseCase{
 		productService: productService,
 	}
@@ -39,12 +39,12 @@ func NewRemoveCategoryFromProductUseCase(productService *product.Service) *Remov
 // Execute runs the use case
 func (uc *RemoveCategoryFromProductUseCase) Execute(ctx context.Context, input RemoveCategoryFromProductInput) (*RemoveCategoryFromProductOutput, error) {
 	// Create value objects
-	productID, err := product.NewProductID(input.ProductID)
+	productID, err := domain.NewProductID(input.ProductID)
 	if err != nil {
 		return nil, err
 	}
 
-	categoryID, err := product.NewCategoryID(input.CategoryID)
+	categoryID, err := domain.NewCategoryID(input.CategoryID)
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +52,7 @@ func (uc *RemoveCategoryFromProductUseCase) Execute(ctx context.Context, input R
 	// Call domain service to remove category from product
 	updatedProduct, err := uc.productService.RemoveCategoryFromProduct(ctx, productID, categoryID)
 	if err != nil {
-		if errors.Is(err, product.ErrProductNotFound) {
+		if errors.Is(err, domain.ErrProductNotFound) {
 			return nil, errors.New("product not found")
 		}
 		return nil, err

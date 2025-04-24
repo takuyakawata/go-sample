@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/sago-sample/internal/product/domain"
+	domain "sago-sample/internal/product/domain"
 )
 
 // UpdateProductInput represents the input data for updating a product
@@ -29,11 +29,11 @@ type UpdateProductOutput struct {
 
 // UpdateProductUseCase defines the use case for updating a product
 type UpdateProductUseCase struct {
-	productService *product.Service
+	productService *domain.Service
 }
 
 // NewUpdateProductUseCase creates a new instance of UpdateProductUseCase
-func NewUpdateProductUseCase(productService *product.Service) *UpdateProductUseCase {
+func NewUpdateProductUseCase(productService *domain.Service) *UpdateProductUseCase {
 	return &UpdateProductUseCase{
 		productService: productService,
 	}
@@ -42,32 +42,32 @@ func NewUpdateProductUseCase(productService *product.Service) *UpdateProductUseC
 // Execute runs the use case
 func (uc *UpdateProductUseCase) Execute(ctx context.Context, input UpdateProductInput) (*UpdateProductOutput, error) {
 	// Create value objects
-	productID, err := product.NewProductID(input.ID)
+	productID, err := domain.NewProductID(input.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	productName, err := product.NewProductName(input.Name)
+	productName, err := domain.NewProductName(input.Name)
 	if err != nil {
 		return nil, err
 	}
 
-	productDescription, err := product.NewProductDescription(input.Description)
+	productDescription, err := domain.NewProductDescription(input.Description)
 	if err != nil {
 		return nil, err
 	}
 
-	price, err := product.NewPrice(input.Price, input.Currency)
+	price, err := domain.NewPrice(input.Price, input.Currency)
 	if err != nil {
 		return nil, err
 	}
 
-	stock := product.NewStock(input.Stock)
+	stock := domain.NewStock(input.Stock)
 
 	// Call domain service to update product
 	updatedProduct, err := uc.productService.UpdateProduct(ctx, productID, productName, productDescription, price, stock)
 	if err != nil {
-		if errors.Is(err, product.ErrProductNotFound) {
+		if errors.Is(err, domain.ErrProductNotFound) {
 			return nil, errors.New("product not found")
 		}
 		return nil, err
