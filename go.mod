@@ -7,8 +7,8 @@ toolchain go1.23.0
 require (
 	github.com/stretchr/testify v1.8.4
 	gorm.io/driver/postgres v1.5.11
-	gorm.io/gen v0.3.27
-	gorm.io/gorm v1.25.12
+	gorm.io/gen v0.3.26
+	gorm.io/gorm v1.25.10
 )
 
 require (
@@ -32,7 +32,7 @@ require (
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/tools v0.26.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	gorm.io/datatypes v1.2.4 // indirect
+	gorm.io/datatypes v1.2.1 // indirect
 	gorm.io/driver/mysql v1.5.6 // indirect
 	gorm.io/hints v1.1.0 // indirect
 	gorm.io/plugin/dbresolver v1.5.0 // indirect

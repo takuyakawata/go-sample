@@ -1,6 +1,7 @@
 package query
 
 import (
+	"context"
 	"gorm.io/gorm"
 	"sago-sample/internal/dao/model"
 )
@@ -32,15 +33,18 @@ type Product struct {
 	Stock       ProductField
 }
 
-// WithContext sets the context for the query
-func (p *ProductDo) WithContext(ctx interface{}) *ProductDo {
-	return &ProductDo{db: p.db.WithContext(ctx.(interface{}))}
+// Where adds a where condition to the query
+
+// WithContext sets the context for the query.
+func (p *ProductDo) WithContext(ctx context.Context) *ProductDo {
+	return &ProductDo{db: p.db.WithContext(ctx)}
 }
 
-// Where adds a where condition to the query
-func (p *ProductDo) Where(conds ...interface{}) *ProductDo {
-	return &ProductDo{db: p.db.Where(conds...)}
-}
+// Where appends filter conditions to the query builder and returns a new instance.
+//func (p *ProductDo) Where(filters ...any) *ProductDo {
+//	queryWithFilters := p.db.Where(filters...) // Apply filters to the underlying query
+//	return &ProductDo{db: queryWithFilters}    // Return a new instance with the updated query
+//}
 
 // First returns the first record that matches the query
 func (p *ProductDo) First() (*model.Product, error) {
@@ -68,6 +72,10 @@ func (p *ProductDo) Delete() (int64, error) {
 }
 
 // Eq creates an equals condition
-func (field ProductField) Eq(value interface{}) interface{} {
-	return gorm.Expr(string(field)+" = ?", value)
+//
+//	func (field ProductField) Eq(value interface{}) interface{} {
+//		return gorm.Expr(string(field)+" = ?", value)
+//	}
+func Eq(fieldName string, value interface{}) interface{} {
+	return gorm.Expr(fieldName+" = ?", value)
 }
