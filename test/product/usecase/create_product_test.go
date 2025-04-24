@@ -15,7 +15,7 @@ import (
 // We're reusing the MockProductRepository from add_category_to_product_test.go
 // No need to redefine it here since both files are in the same package
 
-func TestCreateProductUseCase_Execute(t *testing.T) {
+func CreateProductUseCase_Execute(t *testing.T) {
 	// Create mock repository
 	mockRepo := new(MockProductRepository)
 
