@@ -70,7 +70,7 @@ func (uc *AddCategoryToProductUseCase) Execute(ctx context.Context, input AddCat
 	// Call domain service to add category to product
 	updatedProduct, err := uc.productService.AddCategoryToProduct(ctx, productID, category)
 	if err != nil {
-		if errors.Is(err, product.ErrProductNotFound) {
+		if errors.Is(err, domain.ErrProductNotFound) {
 			return nil, errors.New("product not found")
 		}
 		return nil, err

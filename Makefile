@@ -7,8 +7,8 @@ MIGRATE := migrate -path migrations -database $(DB_URL)
 
 .PHONY: gen migrate-up migrate-down tidy vet test cover
 
-gen:
-	go run ./tools/gen      # regenerate internal/dao
+build:
+	go build -o bin/myapp ./cmd/app/main.go
 
 migrate-up:
 	$(MIGRATE) up

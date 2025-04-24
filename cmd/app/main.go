@@ -36,6 +36,9 @@ func main() {
 		deleteProductUseCase,
 		getProductByIDUseCase,
 		getAllProductsUseCase,
+		addCategoryToProductUseCase,
+		removeCategoryFromProductUseCase,
+		getProductsByCategoryUseCase,
 	)
 
 	// Create router
