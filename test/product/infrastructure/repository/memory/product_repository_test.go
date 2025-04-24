@@ -2,18 +2,18 @@ package memory_test
 
 import (
 	"context"
+	"sago-sample/internal/product/infrastructure"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	domain "sago-sample/internal/product/domain"
-	"sago-sample/internal/product/infrastructure/repository/memory"
 )
 
 func TestProductRepository_SaveAndFindByID(t *testing.T) {
 	// Create repository
-	repo := memory.NewProductRepository()
+	repo := infrastructure.NewProductRepository()
 
 	// Create a product
 	productID, _ := domain.NewProductID("prod-123")
@@ -44,7 +44,7 @@ func TestProductRepository_SaveAndFindByID(t *testing.T) {
 
 func TestProductRepository_FindByID_NotFound(t *testing.T) {
 	// Create repository
-	repo := memory.NewProductRepository()
+	repo := infrastructure.NewProductRepository()
 
 	// Try to find a non-existent product
 	ctx := context.Background()
@@ -57,7 +57,7 @@ func TestProductRepository_FindByID_NotFound(t *testing.T) {
 
 func TestProductRepository_FindAll(t *testing.T) {
 	// Create repository
-	repo := memory.NewProductRepository()
+	repo := infrastructure.NewProductRepository()
 
 	// Create products
 	product1, _ := domain.NewProduct(
@@ -107,7 +107,7 @@ func TestProductRepository_FindAll(t *testing.T) {
 
 func TestProductRepository_Delete(t *testing.T) {
 	// Create repository
-	repo := memory.NewProductRepository()
+	repo := infrastructure.NewProductRepository()
 
 	// Create a product
 	productID, _ := domain.NewProductID("prod-123")
@@ -134,7 +134,7 @@ func TestProductRepository_Delete(t *testing.T) {
 
 func TestProductRepository_FindByCategory(t *testing.T) {
 	// Create repository
-	repo := memory.NewProductRepository()
+	repo := infrastructure.NewProductRepository()
 
 	// Create category
 	categoryID, _ := domain.NewCategoryID("cat-1")

@@ -1,0 +1,48 @@
+package handler
+
+import (
+	"net/http"
+	"strings"
+
+	product "sago-sample/internal/product/usecase"
+)
+
+// GetProductByID handles the retrieval of a product by ID
+func (h *ProductHandler) GetProductByID(w http.ResponseWriter, r *http.Request) {
+	id := strings.TrimPrefix(r.URL.Path, "/products/")
+
+	input := product.GetProductByIDInput{
+		ID: id,
+	}
+
+	output, err := h.getProductByIDUseCase.Execute(r.Context(), input)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			respondWithError(w, http.StatusNotFound, err.Error())
+			return
+		}
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	// Map categories
+	categories := make([]CategoryResponse, 0, len(output.Categories))
+	for _, c := range output.Categories {
+		categories = append(categories, CategoryResponse{
+			ID:   c.ID,
+			Name: c.Name,
+		})
+	}
+
+	response := ProductResponse{
+		ID:          output.ID,
+		Name:        output.Name,
+		Description: output.Description,
+		Price:       output.Price,
+		Currency:    output.Currency,
+		Stock:       output.Stock,
+		Categories:  categories,
+	}
+
+	respondWithJSON(w, http.StatusOK, response)
+}

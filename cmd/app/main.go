@@ -4,16 +4,15 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-
 	product "sago-sample/internal/product/domain"
-	"sago-sample/internal/product/infrastructure/repository/memory"
+	"sago-sample/internal/product/infrastructure"
 	"sago-sample/internal/product/interface/api/handler"
 	productUseCase "sago-sample/internal/product/usecase"
 )
 
 func main() {
 	// Create repositories
-	productRepo := memory.NewProductRepository()
+	productRepo := infrastructure.NewProductRepository()
 
 	// Create domain services
 	productService := product.NewService(productRepo)

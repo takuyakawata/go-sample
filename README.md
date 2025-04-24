@@ -6,25 +6,6 @@ A Domain-Driven Design (DDD) implementation of a product management system in Go
 
 This project follows the principles of Domain-Driven Design (DDD) and Clean Architecture:
 
-```
-.
-├── cmd/                  # Application entry points
-│   └── app/              # Main application
-│       └── main.go       # Main function
-├── internal/             # Private application code
-│   ├── domain/           # Domain layer (entities, value objects, repositories interfaces)
-│   │   └── product/      # Product domain
-│   ├── usecase/          # Application layer (use cases)
-│   │   └── product/      # Product use cases
-│   ├── interface/        # Interface layer (controllers, presenters)
-│   │   └── api/          # API interfaces
-│   │       └── handler/  # HTTP handlers
-│   └── infrastructure/   # Infrastructure layer (repository implementations, external services)
-│       └── repository/   # Repository implementations
-│           └── memory/   # In-memory repository implementation
-└── README.md             # This file
-```
-
 ## Domain Model
 
 The core domain model is the Product entity, which is composed of several value objects:
@@ -58,13 +39,54 @@ The application exposes the following REST API endpoints:
 
 ## Running the Application
 
-To run the application:
+### Local Development
+
+To run the application locally:
 
 ```bash
 go run cmd/app/main.go
 ```
 
 The server will start on port 8080.
+
+### Using Docker
+
+#### Prerequisites
+
+- Docker
+- Docker Compose
+
+#### Running with Docker
+
+1. Build and start the application:
+
+```bash
+docker compose up -d
+```
+
+This will start:
+- PostgreSQL database
+- The Go application
+
+2. Access the application at http://localhost:8080
+
+#### Database Migrations
+
+To run database migrations:
+
+```bash
+# Run migrations up
+docker compose --profile tools run migrate up
+
+# Run migrations down (rollback)
+docker compose --profile tools run migrate down 1
+```
+
+#### Stopping the Application
+
+```bash
+docker compose down
+```
 
 ## Example API Requests
 
@@ -127,10 +149,11 @@ curl -X GET http://localhost:8080/products
 
 ## Future Improvements
 
-1. Add a persistent database implementation (PostgreSQL, MongoDB)
+1. ✅ Add a persistent database implementation (PostgreSQL)
 2. Add authentication and authorization
 3. Implement pagination for listing products
 4. Add more comprehensive validation
 5. Add logging and monitoring
 6. Implement caching for frequently accessed data
 7. Add more comprehensive error handling
+8. Implement database repository (currently using in-memory repository)
