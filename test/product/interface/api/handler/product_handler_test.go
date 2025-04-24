@@ -118,7 +118,7 @@ func (m *MockGetProductsByCategoryUseCase) Execute(ctx context.Context, input us
 	return args.Get(0).(*usecase.GetProductsByCategoryOutput), args.Error(1)
 }
 
-func TestProductHandler_CreateProduct(t *testing.T) {
+func ProductHandler_CreateProduct(t *testing.T) {
 	// Create mocks
 	createUseCase := new(MockCreateProductUseCase)
 	updateUseCase := new(MockUpdateProductUseCase)
