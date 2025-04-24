@@ -12,72 +12,18 @@ import (
 	usecase "sago-sample/internal/product/usecase"
 )
 
-// MockProductService is a mock implementation of the product.Service
-type MockProductService struct {
-	mock.Mock
-}
-
-func (m *MockProductService) CreateProduct(ctx context.Context, id domain.ProductID, name domain.ProductName, description domain.ProductDescription, price domain.Price, stock domain.Stock) (*domain.Product, error) {
-	args := m.Called(ctx, id, name, description, price, stock)
-	if args.Get(0) == nil {
-		return nil, args.Error(1)
-	}
-	return args.Get(0).(*domain.Product), args.Error(1)
-}
-
-func (m *MockProductService) UpdateProduct(ctx context.Context, id domain.ProductID, name domain.ProductName, description domain.ProductDescription, price domain.Price, stock domain.Stock) (*domain.Product, error) {
-	args := m.Called(ctx, id, name, description, price, stock)
-	if args.Get(0) == nil {
-		return nil, args.Error(1)
-	}
-	return args.Get(0).(*domain.Product), args.Error(1)
-}
-
-func (m *MockProductService) DeleteProduct(ctx context.Context, id domain.ProductID) error {
-	args := m.Called(ctx, id)
-	return args.Error(0)
-}
-
-func (m *MockProductService) GetProductByID(ctx context.Context, id domain.ProductID) (*domain.Product, error) {
-	args := m.Called(ctx, id)
-	if args.Get(0) == nil {
-		return nil, args.Error(1)
-	}
-	return args.Get(0).(*domain.Product), args.Error(1)
-}
-
-func (m *MockProductService) GetAllProducts(ctx context.Context) ([]*domain.Product, error) {
-	args := m.Called(ctx)
-	return args.Get(0).([]*domain.Product), args.Error(1)
-}
-
-func (m *MockProductService) AddCategoryToProduct(ctx context.Context, productID domain.ProductID, categoryID domain.CategoryID, categoryName domain.CategoryName) (*domain.Product, error) {
-	args := m.Called(ctx, productID, categoryID, categoryName)
-	if args.Get(0) == nil {
-		return nil, args.Error(1)
-	}
-	return args.Get(0).(*domain.Product), args.Error(1)
-}
-
-func (m *MockProductService) RemoveCategoryFromProduct(ctx context.Context, productID domain.ProductID, categoryID domain.CategoryID) (*domain.Product, error) {
-	args := m.Called(ctx, productID, categoryID)
-	if args.Get(0) == nil {
-		return nil, args.Error(1)
-	}
-	return args.Get(0).(*domain.Product), args.Error(1)
-}
-
-func (m *MockProductService) GetProductsByCategory(ctx context.Context, categoryID domain.CategoryID) ([]*domain.Product, error) {
-	args := m.Called(ctx, categoryID)
-	return args.Get(0).([]*domain.Product), args.Error(1)
-}
+// We're reusing the MockProductRepository from add_category_to_product_test.go
+// No need to redefine it here since both files are in the same package
 
 func TestCreateProductUseCase_Execute(t *testing.T) {
-	// Create mock service
-	mockService := new(MockProductService)
+	// Create mock repository
+	mockRepo := new(MockProductRepository)
+
+	// Create real service with mock repository
+	productService := domain.NewService(mockRepo)
 
 	// Create use case
-	useCase := usecase.NewCreateProductUseCase(mockService)
+	useCase := usecase.NewCreateProductUseCase(productService)
 
 	// Test data
 	ctx := context.Background()
@@ -90,19 +36,14 @@ func TestCreateProductUseCase_Execute(t *testing.T) {
 		Stock:       10,
 	}
 
-	// Create expected domain objects
+	// Create product ID for expectation
 	productID, _ := domain.NewProductID(input.ID)
-	productName, _ := domain.NewProductName(input.Name)
-	productDesc, _ := domain.NewProductDescription(input.Description)
-	price, _ := domain.NewPrice(input.Price, input.Currency)
-	stock := domain.NewStock(input.Stock)
-
-	// Create expected product
-	expectedProduct, _ := domain.NewProduct(productID, productName, productDesc, price, stock)
 
 	// Setup expectations
-	mockService.On("CreateProduct", ctx, mock.Anything, mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-		Return(expectedProduct, nil)
+	// First, the service will check if the product exists
+	mockRepo.On("FindByID", ctx, productID).Return(nil, domain.ErrProductNotFound)
+	// Then, it will save the new product
+	mockRepo.On("Save", ctx, mock.Anything).Return(nil)
 
 	// Execute use case
 	output, err := useCase.Execute(ctx, input)
@@ -118,15 +59,18 @@ func TestCreateProductUseCase_Execute(t *testing.T) {
 	assert.Equal(t, input.Stock, output.Stock)
 
 	// Verify expectations
-	mockService.AssertExpectations(t)
+	mockRepo.AssertExpectations(t)
 }
 
 func TestCreateProductUseCase_Execute_Error(t *testing.T) {
-	// Create mock service
-	mockService := new(MockProductService)
+	// Create mock repository
+	mockRepo := new(MockProductRepository)
+
+	// Create real service with mock repository
+	productService := domain.NewService(mockRepo)
 
 	// Create use case
-	useCase := usecase.NewCreateProductUseCase(mockService)
+	useCase := usecase.NewCreateProductUseCase(productService)
 
 	// Test data
 	ctx := context.Background()
@@ -139,9 +83,11 @@ func TestCreateProductUseCase_Execute_Error(t *testing.T) {
 		Stock:       10,
 	}
 
-	// Setup expectations - return an error
-	mockService.On("CreateProduct", ctx, mock.Anything, mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-		Return(nil, domain.ErrProductExists)
+	// Create product ID for expectation
+	productID, _ := domain.NewProductID(input.ID)
+
+	// Setup expectations - product already exists
+	mockRepo.On("FindByID", ctx, productID).Return(&domain.Product{}, nil)
 
 	// Execute use case
 	output, err := useCase.Execute(ctx, input)
@@ -151,5 +97,5 @@ func TestCreateProductUseCase_Execute_Error(t *testing.T) {
 	assert.Nil(t, output)
 
 	// Verify expectations
-	mockService.AssertExpectations(t)
+	mockRepo.AssertExpectations(t)
 }

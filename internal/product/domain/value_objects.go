@@ -28,6 +28,15 @@ func (id ProductID) IsEmpty() bool {
 	return strings.TrimSpace(string(id)) == ""
 }
 
+// MustNewProductID creates a new ProductID and panics if validation fails
+func MustNewProductID(id string) ProductID {
+	productID, err := NewProductID(id)
+	if err != nil {
+		panic(err)
+	}
+	return productID
+}
+
 // ProductName represents the name of a product
 type ProductName string
 
@@ -53,6 +62,15 @@ func (n ProductName) IsEmpty() bool {
 	return strings.TrimSpace(string(n)) == ""
 }
 
+// MustNewProductName creates a new ProductName and panics if validation fails
+func MustNewProductName(name string) ProductName {
+	productName, err := NewProductName(name)
+	if err != nil {
+		panic(err)
+	}
+	return productName
+}
+
 // ProductDescription represents the description of a product
 type ProductDescription string
 
@@ -68,6 +86,15 @@ func NewProductDescription(description string) (ProductDescription, error) {
 // String returns the string representation of the ProductDescription
 func (d ProductDescription) String() string {
 	return string(d)
+}
+
+// MustNewProductDescription creates a new ProductDescription and panics if validation fails
+func MustNewProductDescription(description string) ProductDescription {
+	productDescription, err := NewProductDescription(description)
+	if err != nil {
+		panic(err)
+	}
+	return productDescription
 }
 
 // Price represents the monetary value of a product
@@ -112,6 +139,15 @@ func (p Price) Currency() string {
 // String returns the string representation of the Price
 func (p Price) String() string {
 	return fmt.Sprintf("%d %s", p.amount, p.currency)
+}
+
+// MustNewPrice creates a new Price and panics if validation fails
+func MustNewPrice(amount uint, currency string) Price {
+	price, err := NewPrice(amount, currency)
+	if err != nil {
+		panic(err)
+	}
+	return price
 }
 
 // Stock represents the available quantity of a product

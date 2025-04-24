@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -78,6 +79,45 @@ func (m *MockGetAllProductsUseCase) Execute(ctx context.Context) (*usecase.GetAl
 	return args.Get(0).(*usecase.GetAllProductsOutput), args.Error(1)
 }
 
+// MockAddCategoryToProductUseCase mocks the AddCategoryToProductUseCase
+type MockAddCategoryToProductUseCase struct {
+	mock.Mock
+}
+
+func (m *MockAddCategoryToProductUseCase) Execute(ctx context.Context, input usecase.AddCategoryToProductInput) (*usecase.AddCategoryToProductOutput, error) {
+	args := m.Called(ctx, input)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*usecase.AddCategoryToProductOutput), args.Error(1)
+}
+
+// MockRemoveCategoryFromProductUseCase mocks the RemoveCategoryFromProductUseCase
+type MockRemoveCategoryFromProductUseCase struct {
+	mock.Mock
+}
+
+func (m *MockRemoveCategoryFromProductUseCase) Execute(ctx context.Context, input usecase.RemoveCategoryFromProductInput) (*usecase.RemoveCategoryFromProductOutput, error) {
+	args := m.Called(ctx, input)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*usecase.RemoveCategoryFromProductOutput), args.Error(1)
+}
+
+// MockGetProductsByCategoryUseCase mocks the GetProductsByCategoryUseCase
+type MockGetProductsByCategoryUseCase struct {
+	mock.Mock
+}
+
+func (m *MockGetProductsByCategoryUseCase) Execute(ctx context.Context, input usecase.GetProductsByCategoryInput) (*usecase.GetProductsByCategoryOutput, error) {
+	args := m.Called(ctx, input)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*usecase.GetProductsByCategoryOutput), args.Error(1)
+}
+
 func TestProductHandler_CreateProduct(t *testing.T) {
 	// Create mocks
 	createUseCase := new(MockCreateProductUseCase)
@@ -85,15 +125,32 @@ func TestProductHandler_CreateProduct(t *testing.T) {
 	deleteUseCase := new(MockDeleteProductUseCase)
 	getByIDUseCase := new(MockGetProductByIDUseCase)
 	getAllUseCase := new(MockGetAllProductsUseCase)
+	addCategoryUseCase := new(MockAddCategoryToProductUseCase)
+	removeCategoryUseCase := new(MockRemoveCategoryFromProductUseCase)
+	getProductsByCategoryUseCase := new(MockGetProductsByCategoryUseCase)
 
 	// Create handler
 	productHandler := handler.NewProductHandler(
-		createUseCase,
-		updateUseCase,
-		deleteUseCase,
-		getByIDUseCase,
-		getAllUseCase,
+		(*usecase.CreateProductUseCase)(nil),
+		(*usecase.UpdateProductUseCase)(nil),
+		(*usecase.DeleteProductUseCase)(nil),
+		(*usecase.GetProductByIDUseCase)(nil),
+		(*usecase.GetAllProductsUseCase)(nil),
+		(*usecase.AddCategoryToProductUseCase)(nil),
+		(*usecase.RemoveCategoryFromProductUseCase)(nil),
+		(*usecase.GetProductsByCategoryUseCase)(nil),
 	)
+
+	// Replace the handler's fields with our mocks using reflection
+	handlerValue := reflect.ValueOf(productHandler).Elem()
+	handlerValue.FieldByName("createProductUseCase").Set(reflect.ValueOf(createUseCase))
+	handlerValue.FieldByName("updateProductUseCase").Set(reflect.ValueOf(updateUseCase))
+	handlerValue.FieldByName("deleteProductUseCase").Set(reflect.ValueOf(deleteUseCase))
+	handlerValue.FieldByName("getProductByIDUseCase").Set(reflect.ValueOf(getByIDUseCase))
+	handlerValue.FieldByName("getAllProductsUseCase").Set(reflect.ValueOf(getAllUseCase))
+	handlerValue.FieldByName("addCategoryToProductUseCase").Set(reflect.ValueOf(addCategoryUseCase))
+	handlerValue.FieldByName("removeCategoryFromProductUseCase").Set(reflect.ValueOf(removeCategoryUseCase))
+	handlerValue.FieldByName("getProductsByCategoryUseCase").Set(reflect.ValueOf(getProductsByCategoryUseCase))
 
 	// Create request body
 	reqBody := map[string]interface{}{
@@ -161,15 +218,32 @@ func TestProductHandler_GetProductByID(t *testing.T) {
 	deleteUseCase := new(MockDeleteProductUseCase)
 	getByIDUseCase := new(MockGetProductByIDUseCase)
 	getAllUseCase := new(MockGetAllProductsUseCase)
+	addCategoryUseCase := new(MockAddCategoryToProductUseCase)
+	removeCategoryUseCase := new(MockRemoveCategoryFromProductUseCase)
+	getProductsByCategoryUseCase := new(MockGetProductsByCategoryUseCase)
 
 	// Create handler
 	productHandler := handler.NewProductHandler(
-		createUseCase,
-		updateUseCase,
-		deleteUseCase,
-		getByIDUseCase,
-		getAllUseCase,
+		(*usecase.CreateProductUseCase)(nil),
+		(*usecase.UpdateProductUseCase)(nil),
+		(*usecase.DeleteProductUseCase)(nil),
+		(*usecase.GetProductByIDUseCase)(nil),
+		(*usecase.GetAllProductsUseCase)(nil),
+		(*usecase.AddCategoryToProductUseCase)(nil),
+		(*usecase.RemoveCategoryFromProductUseCase)(nil),
+		(*usecase.GetProductsByCategoryUseCase)(nil),
 	)
+
+	// Replace the handler's fields with our mocks using reflection
+	handlerValue := reflect.ValueOf(productHandler).Elem()
+	handlerValue.FieldByName("createProductUseCase").Set(reflect.ValueOf(createUseCase))
+	handlerValue.FieldByName("updateProductUseCase").Set(reflect.ValueOf(updateUseCase))
+	handlerValue.FieldByName("deleteProductUseCase").Set(reflect.ValueOf(deleteUseCase))
+	handlerValue.FieldByName("getProductByIDUseCase").Set(reflect.ValueOf(getByIDUseCase))
+	handlerValue.FieldByName("getAllProductsUseCase").Set(reflect.ValueOf(getAllUseCase))
+	handlerValue.FieldByName("addCategoryToProductUseCase").Set(reflect.ValueOf(addCategoryUseCase))
+	handlerValue.FieldByName("removeCategoryFromProductUseCase").Set(reflect.ValueOf(removeCategoryUseCase))
+	handlerValue.FieldByName("getProductsByCategoryUseCase").Set(reflect.ValueOf(getProductsByCategoryUseCase))
 
 	// Create request
 	req := httptest.NewRequest(http.MethodGet, "/products/prod-123", nil)

@@ -11,26 +11,48 @@ import (
 	productUseCase "sago-sample/internal/product/usecase"
 )
 
-// MockProductService is a mock implementation of the domain.Service interface
-type MockProductService struct {
+// MockProductRepository is a mock implementation of the domain.Repository interface
+type MockProductRepository struct {
 	mock.Mock
 }
 
-// AddCategoryToProduct mocks the AddCategoryToProduct method
-func (m *MockProductService) AddCategoryToProduct(ctx context.Context, productID domain.ProductID, category *domain.Category) (*domain.Product, error) {
-	args := m.Called(ctx, productID, category)
+func (m *MockProductRepository) FindByID(ctx context.Context, id domain.ProductID) (*domain.Product, error) {
+	args := m.Called(ctx, id)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
 	return args.Get(0).(*domain.Product), args.Error(1)
 }
 
+func (m *MockProductRepository) FindAll(ctx context.Context) ([]*domain.Product, error) {
+	args := m.Called(ctx)
+	return args.Get(0).([]*domain.Product), args.Error(1)
+}
+
+func (m *MockProductRepository) FindByCategory(ctx context.Context, categoryID domain.CategoryID) ([]*domain.Product, error) {
+	args := m.Called(ctx, categoryID)
+	return args.Get(0).([]*domain.Product), args.Error(1)
+}
+
+func (m *MockProductRepository) Save(ctx context.Context, product *domain.Product) error {
+	args := m.Called(ctx, product)
+	return args.Error(0)
+}
+
+func (m *MockProductRepository) Delete(ctx context.Context, id domain.ProductID) error {
+	args := m.Called(ctx, id)
+	return args.Error(0)
+}
+
 func TestAddCategoryToProduct(t *testing.T) {
-	// Create mock service
-	mockService := new(MockProductService)
+	// Create mock repository
+	mockRepo := new(MockProductRepository)
+
+	// Create real service with mock repository
+	productService := domain.NewService(mockRepo)
 
 	// Create use case
-	useCase := productUseCase.NewAddCategoryToProductUseCase(mockService)
+	useCase := productUseCase.NewAddCategoryToProductUseCase(productService)
 
 	// Create test data
 	productID := "prod-123"
@@ -44,12 +66,8 @@ func TestAddCategoryToProduct(t *testing.T) {
 		CategoryName: categoryName,
 	}
 
-	// Create expected output
-	// This would typically be a product with the category added
-	// For simplicity, we'll just assert that the method was called with the right parameters
-
 	// Set up expectations
-	mockService.On("AddCategoryToProduct", mock.Anything, mock.Anything, mock.Anything).Return(nil, domain.ErrProductNotFound)
+	mockRepo.On("FindByID", mock.Anything, mock.Anything).Return(nil, domain.ErrProductNotFound)
 
 	// Execute use case
 	output, err := useCase.Execute(context.Background(), input)
@@ -57,5 +75,5 @@ func TestAddCategoryToProduct(t *testing.T) {
 	// Assert expectations
 	assert.Error(t, err)
 	assert.Nil(t, output)
-	mockService.AssertExpectations(t)
+	mockRepo.AssertExpectations(t)
 }
