@@ -10,12 +10,11 @@ on:
     branches: [ "main" ]
 
 jobs:
-- name: Check Go version
-  run: go version
-
   build:
     runs-on: ubuntu-latest
     steps:
+    - name: Check Go version
+      run: go version
     - uses: actions/checkout@v4
 
     - name: Set up Go
