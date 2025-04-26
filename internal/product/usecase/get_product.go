@@ -7,13 +7,11 @@ import (
 	domain "sago-sample/internal/product/domain"
 )
 
-// GetProductByIDInput represents the input data for getting a product by ID
-type GetProductByIDInput struct {
+type GetProductInput struct {
 	ID string
 }
 
-// GetProductByIDOutput represents the output data after getting a product
-type GetProductByIDOutput struct {
+type GetProductOutput struct {
 	ID          string
 	Name        string
 	Description string
@@ -23,20 +21,18 @@ type GetProductByIDOutput struct {
 	Categories  []CategoryOutput
 }
 
-// GetProductByIDUseCase defines the use case for getting a product by ID
-type GetProductByIDUseCase struct {
-	productService *domain.Service
+type GetProductUseCase struct {
+	repo domain.Repository
 }
 
-// NewGetProductByIDUseCase creates a new instance of GetProductByIDUseCase
-func NewGetProductByIDUseCase(productService *domain.Service) *GetProductByIDUseCase {
-	return &GetProductByIDUseCase{
-		productService: productService,
+func NewGetProductUseCase(repo domain.Repository) *GetProductUseCase {
+	return &GetProductUseCase{
+		repo: repo,
 	}
 }
 
 // Execute runs the use case
-func (uc *GetProductByIDUseCase) Execute(ctx context.Context, input GetProductByIDInput) (*GetProductByIDOutput, error) {
+func (uc *GetProductUseCase) Execute(ctx context.Context, input GetProductInput) (*GetProductOutput, error) {
 	// Create value object
 	productID, err := domain.NewProductID(input.ID)
 	if err != nil {
@@ -44,7 +40,7 @@ func (uc *GetProductByIDUseCase) Execute(ctx context.Context, input GetProductBy
 	}
 
 	// Call domain service to get product
-	foundProduct, err := uc.productService.GetProductByID(ctx, productID)
+	foundProduct, err := uc.repo.FindByID(ctx, productID)
 	if err != nil {
 		if errors.Is(err, domain.ErrProductNotFound) {
 			return nil, errors.New("product not found")
@@ -62,7 +58,7 @@ func (uc *GetProductByIDUseCase) Execute(ctx context.Context, input GetProductBy
 		})
 	}
 
-	return &GetProductByIDOutput{
+	return &GetProductOutput{
 		ID:          foundProduct.ID().String(),
 		Name:        foundProduct.Name().String(),
 		Description: foundProduct.Description().String(),
@@ -91,20 +87,18 @@ type ProductOutput struct {
 
 // GetAllProductsUseCase defines the use case for getting all products
 type GetAllProductsUseCase struct {
-	productService *domain.Service
+	repo domain.Repository
 }
 
 // NewGetAllProductsUseCase creates a new instance of GetAllProductsUseCase
-func NewGetAllProductsUseCase(productService *domain.Service) *GetAllProductsUseCase {
-	return &GetAllProductsUseCase{
-		productService: productService,
-	}
+func NewGetAllProductsUseCase(repo domain.Repository) *GetAllProductsUseCase {
+	return &GetAllProductsUseCase{repo: repo}
 }
 
 // Execute runs the use case
 func (uc *GetAllProductsUseCase) Execute(ctx context.Context) (*GetAllProductsOutput, error) {
 	// Call domain service to get all products
-	products, err := uc.productService.GetAllProducts(ctx)
+	products, err := uc.repo.FindAll(ctx)
 	if err != nil {
 		return nil, err
 	}

@@ -1,3 +1,4 @@
+// api/product.go
 package main
 
 import (
@@ -8,39 +9,42 @@ import (
 	usecase "sago-sample/internal/product/usecase"
 )
 
-package main
-
-import (
-"net/http"
-"github.com/go-chi/chi/v5"
-
-"myapp/internal/handler"
-"myapp/internal/product/infrastructure"
-"myapp/internal/product/usecase"
-)
-
 func Handler(w http.ResponseWriter, r *http.Request) {
-	// DI
-	repo            := infrastructure.NewProductRepository()
-	ucGetAll        := usecase.NewGetAllProductsUseCase(repo)
-	ucGetByID       := usecase.NewGetProductByIDUseCase(repo)
-	ucCreate        := usecase.NewCreateProductUseCase(repo)
-	//ucUpdate        := usecase.NewUpdateProductUseCase(repo)
-	//ucDelete        := usecase.NewDeleteProductUseCase(repo)
-	//ucAddCategory   := usecase.NewAddCategoryToProductUseCase(repo)
-	//ucRemoveCategory:= usecase.NewRemoveCategoryFromProductUseCase(repo)
+	// 1) DI: リポジトリ → ユースケース → ハンドラーを組み立て
+	repo := infrastructure.NewProductRepository()
+	ucGetAll := usecase.NewGetAllProductsUseCase(repo)
+	ucGetByID := usecase.NewGetProductUseCase(repo)
+	//ucCreate := usecase.NewCreateProductUseCase(repo)
+	//ucUpdate := usecase.NewUpdateProductUseCase(repo)
+	//ucDelete := usecase.NewDeleteProductUseCase(repo)
+	//ucAddCat := usecase.NewAddCategoryToProductUseCase(repo)
+	//ucRemCat := usecase.NewRemoveCategoryFromProductUseCase(repo)
+	// 必要なら他のユースケースも…
 
-	// ハンドラー生成
-	hGet    := handler.NewGetProductHandler(ucGetAll, ucGetByID)
-	hCreate := handler.NewCreateProductHandler(ucCreate)
-	// …他のハンドラーも同様…
+	hGet := handler.NewGetProductHandler(ucGetByID, ucGetAll)
+	//hCreate := handler.NewCreateProductHandler(ucCreate)
+	//hUpdate := handler.NewUpdateProductHandler(ucUpdate)
+	//hDelete := handler.NewDeleteProductHandler(ucDelete)
+	//hCat := handler.NewCategoryHandler(ucAddCat, ucRemCat)
+	// それぞれ internal/handler/*.go ファイルに定義しておきます
 
-	// ルーター
+	// 2) chi ルーターにパスを定義
 	rtr := chi.NewRouter()
-	rtr.Get("/api/products",            hGet.HandleGetAll)
-	rtr.Get("/api/products/{id}",       hGet.HandleGetByID)
-	rtr.Post("/api/products",           hCreate.Handle)
-	// …PUT, DELETE, category 周り…
 
+	// Product
+	//rtr.Get("/api/products", hGet.HandleGetAll)       // GET  /api/products
+	rtr.Get("/api/products/{id}", hGet.HandleGetByID) // GET  /api/products/{id}
+	//rtr.Post("/api/products", hCreate.Handle)         // POST /api/products
+	//rtr.Put("/api/products/{id}", hUpdate.Handle)     // PUT  /api/products/{id}
+	//rtr.Delete("/api/products/{id}", hDelete.Handle)  // DELETE /api/products/{id}
+
+	// Category on Product
+	//rtr.Post("/api/products/{id}/categories", hCat.HandleAdd)            // POST   /api/products/{id}/categories
+	//rtr.Delete("/api/products/{id}/categories/{cid}", hCat.HandleRemove) // DELETE /api/products/{id}/categories/{cid}
+
+	// Optional: List by category
+	//rtr.Get("/api/categories/{id}/products", hGet.HandleByCategory)
+
+	// 3) エントリポイントにリクエストを渡す
 	rtr.ServeHTTP(w, r)
 }

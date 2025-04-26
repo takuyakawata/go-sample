@@ -2,21 +2,19 @@ package handler
 
 import (
 	"net/http"
-	"sago-sample/api"
 	"strings"
 
-	product "sago-sample/internal/product/usecase"
+	usecase "sago-sample/internal/product/usecase"
 )
 
-// GetProductByID handles the retrieval of a product by ID
-func (h *api.ProductHandler) GetProductByID(w http.ResponseWriter, r *http.Request) {
+func (h *api.ProductHandler) NewGetProductHandler(w http.ResponseWriter, r *http.Request) {
 	id := strings.TrimPrefix(r.URL.Path, "/products/")
 
-	input := product.GetProductByIDInput{
+	input := usecase.GetProductInput{
 		ID: id,
 	}
 
-	output, err := h.getProductByIDUseCase.Execute(r.Context(), input)
+	output, err := h.getProductUseCase.Execute(r.Context(), input)
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") {
 			respondWithError(w, http.StatusNotFound, err.Error())
