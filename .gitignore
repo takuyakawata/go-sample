@@ -63,3 +63,4 @@ logs/
 *.lock
 # goreleaser / gh-release で吐く成果物
 release/
+.vercel

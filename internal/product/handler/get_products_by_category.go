@@ -2,11 +2,23 @@ package handler
 
 import (
 	"net/http"
+	"sago-sample/api"
+	"strings"
+
+	product "sago-sample/internal/product/usecase"
 )
 
-// GetAllProducts handles the retrieval of all products
-func (h *ProductHandler) GetAllProducts(w http.ResponseWriter, r *http.Request) {
-	output, err := h.getAllProductsUseCase.Execute(r.Context())
+// GetProductsByCategory handles retrieving products by category
+func (h *api.ProductHandler) GetProductsByCategory(w http.ResponseWriter, r *http.Request) {
+	// Extract category ID from URL
+	categoryID := strings.TrimPrefix(r.URL.Path, "/categories/")
+	categoryID = strings.TrimSuffix(categoryID, "/products")
+
+	input := product.GetProductsByCategoryInput{
+		CategoryID: categoryID,
+	}
+
+	output, err := h.getProductsByCategoryUseCase.Execute(r.Context(), input)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return

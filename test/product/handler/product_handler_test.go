@@ -7,13 +7,13 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"reflect"
+	"sago-sample/api"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	"sago-sample/internal/product/interface/api/handler"
 	usecase "sago-sample/internal/product/usecase"
 )
 
@@ -130,7 +130,7 @@ func ProductHandler_CreateProduct(t *testing.T) {
 	getProductsByCategoryUseCase := new(MockGetProductsByCategoryUseCase)
 
 	// Create handler
-	productHandler := handler.NewProductHandler(
+	productHandler := api.NewProductHandler(
 		(*usecase.CreateProductUseCase)(nil),
 		(*usecase.UpdateProductUseCase)(nil),
 		(*usecase.DeleteProductUseCase)(nil),
@@ -223,7 +223,7 @@ func TestProductHandler_GetProductByID(t *testing.T) {
 	getProductsByCategoryUseCase := new(MockGetProductsByCategoryUseCase)
 
 	// Create handler
-	productHandler := handler.NewProductHandler(
+	productHandler := api.NewProductHandler(
 		(*usecase.CreateProductUseCase)(nil),
 		(*usecase.UpdateProductUseCase)(nil),
 		(*usecase.DeleteProductUseCase)(nil),

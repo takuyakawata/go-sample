@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"sago-sample/api"
 	"strings"
 
 	product "sago-sample/internal/product/usecase"
@@ -15,7 +16,7 @@ type AddCategoryToProductRequest struct {
 }
 
 // AddCategoryToProduct handles adding a category to a product
-func (h *ProductHandler) AddCategoryToProduct(w http.ResponseWriter, r *http.Request) {
+func (h *api.ProductHandler) AddCategoryToProduct(w http.ResponseWriter, r *http.Request) {
 	// Extract product ID from URL
 	productID := strings.TrimPrefix(r.URL.Path, "/products/")
 	productID = strings.TrimSuffix(productID, "/categories")

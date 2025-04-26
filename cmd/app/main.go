@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sago-sample/api"
 	product "sago-sample/internal/product/domain"
 	"sago-sample/internal/product/infrastructure"
-	"sago-sample/internal/product/interface/api/handler"
 	productUseCase "sago-sample/internal/product/usecase"
 )
 
@@ -30,7 +30,7 @@ func main() {
 	getProductsByCategoryUseCase := productUseCase.NewGetProductsByCategoryUseCase(productService)
 
 	// Create handlers
-	productHandler := handler.NewProductHandler(
+	productHandler := api.NewProductHandler(
 		createProductUseCase,
 		updateProductUseCase,
 		deleteProductUseCase,

@@ -3,13 +3,14 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"sago-sample/api"
+	"strings"
 
 	product "sago-sample/internal/product/usecase"
 )
 
-// CreateProductRequest represents the request body for creating a product
-type CreateProductRequest struct {
-	ID          string `json:"id"`
+// UpdateProductRequest represents the request body for updating a product
+type UpdateProductRequest struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Price       uint   `json:"price"`
@@ -17,17 +18,19 @@ type CreateProductRequest struct {
 	Stock       uint   `json:"stock"`
 }
 
-// CreateProduct handles the creation of a new product
-func (h *ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
-	var req CreateProductRequest
+// UpdateProduct handles the update of an existing product
+func (h *api.ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
+	id := strings.TrimPrefix(r.URL.Path, "/products/")
+
+	var req UpdateProductRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
 	defer r.Body.Close()
 
-	input := product.CreateProductInput{
-		ID:          req.ID,
+	input := product.UpdateProductInput{
+		ID:          id,
 		Name:        req.Name,
 		Description: req.Description,
 		Price:       req.Price,
@@ -35,8 +38,12 @@ func (h *ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 		Stock:       req.Stock,
 	}
 
-	output, err := h.createProductUseCase.Execute(r.Context(), input)
+	output, err := h.updateProductUseCase.Execute(r.Context(), input)
 	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			respondWithError(w, http.StatusNotFound, err.Error())
+			return
+		}
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -54,5 +61,5 @@ func (h *ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 		Categories:  categories,
 	}
 
-	respondWithJSON(w, http.StatusCreated, response)
+	respondWithJSON(w, http.StatusOK, response)
 }

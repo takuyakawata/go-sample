@@ -5,6 +5,7 @@ go 1.23
 toolchain go1.23.0
 
 require (
+	github.com/go-chi/chi/v5 v5.2.1
 	github.com/stretchr/testify v1.8.4
 	gorm.io/driver/postgres v1.5.11
 	gorm.io/gen v0.3.26
@@ -15,7 +16,6 @@ require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
-	github.com/google/uuid v1.3.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20231201235250-de7065d80cb9 // indirect
 	github.com/jackc/pgx/v5 v5.5.5 // indirect

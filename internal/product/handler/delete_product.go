@@ -2,13 +2,14 @@ package handler
 
 import (
 	"net/http"
+	"sago-sample/api"
 	"strings"
 
 	product "sago-sample/internal/product/usecase"
 )
 
 // DeleteProduct handles the deletion of a product
-func (h *ProductHandler) DeleteProduct(w http.ResponseWriter, r *http.Request) {
+func (h *api.ProductHandler) DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	id := strings.TrimPrefix(r.URL.Path, "/products/")
 
 	input := product.DeleteProductInput{

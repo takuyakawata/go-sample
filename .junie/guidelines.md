@@ -10,15 +10,15 @@ This document summarizes the key best practices for developing applications in G
 myapp/
 ├── cmd/
 │   └── app/
-│       └── main.go                         # Application entry point
+│       └── main.go 
+│── api/
+│    └── produnt.go                         # Application entry point
 │
 ├── internal/                               # Private application code (import path: myapp/internal)
 │   ├── product/                            # "商品" ドメイン
 │   │   ├── domain/                         # Entities, value objects, repository interfaces
 │   │   ├── usecase/                        # Use-cases / Application services
-│   │   ├── interface/                      # Interface adapters
-│   │   │   └── api/
-│   │   │       └── handler/                # HTTP / gRPC handlers specific to product
+│   │   ├── handler/                        # HTTP / gRPC handlers specific to product
 │   │   └── infrastructure/                 # Gateways & repository implementations
 │   │       └── repository/
 │   │

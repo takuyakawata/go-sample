@@ -2,13 +2,14 @@ package handler
 
 import (
 	"net/http"
+	"sago-sample/api"
 	"strings"
 
 	product "sago-sample/internal/product/usecase"
 )
 
 // GetProductByID handles the retrieval of a product by ID
-func (h *ProductHandler) GetProductByID(w http.ResponseWriter, r *http.Request) {
+func (h *api.ProductHandler) GetProductByID(w http.ResponseWriter, r *http.Request) {
 	id := strings.TrimPrefix(r.URL.Path, "/products/")
 
 	input := product.GetProductByIDInput{

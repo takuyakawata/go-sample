@@ -2,13 +2,14 @@ package handler
 
 import (
 	"net/http"
+	"sago-sample/api"
 	"strings"
 
 	product "sago-sample/internal/product/usecase"
 )
 
 // RemoveCategoryFromProduct handles removing a category from a product
-func (h *ProductHandler) RemoveCategoryFromProduct(w http.ResponseWriter, r *http.Request) {
+func (h *api.ProductHandler) RemoveCategoryFromProduct(w http.ResponseWriter, r *http.Request) {
 	// Extract product ID and category ID from URL
 	path := strings.TrimPrefix(r.URL.Path, "/products/")
 	parts := strings.Split(path, "/categories/")
