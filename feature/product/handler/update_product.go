@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"github.com/go-chi/chi/v5"
 	"net/http"
-	product "sago-sample/internal/product/usecase"
+	product "sago-sample/feature/product/usecase"
 )
 
 type UpdateProductHandler struct {

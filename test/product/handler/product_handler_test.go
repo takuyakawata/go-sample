@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	usecase "sago-sample/internal/product/usecase"
+	usecase "sago-sample/feature/product/usecase"
 )
 
 // MockCreateProductUseCase mocks the CreateProductUseCase

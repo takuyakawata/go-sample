@@ -3,10 +3,9 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
-	"sago-sample/api"
 	"strings"
 
-	product "sago-sample/internal/product/usecase"
+	product "sago-sample/feature/product/usecase"
 )
 
 // AddCategoryToProductRequest represents the request body for adding a category to a product

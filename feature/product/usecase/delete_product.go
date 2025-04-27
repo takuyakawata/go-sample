@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	domain "sago-sample/internal/product/domain"
+	domain "sago-sample/feature/product/domain"
 )
 
 // DeleteProductInput represents the input data for deleting a product
@@ -26,13 +26,11 @@ func NewDeleteProductUseCase(productService *domain.Service) *DeleteProductUseCa
 
 // Execute runs the use case
 func (uc *DeleteProductUseCase) Execute(ctx context.Context, input DeleteProductInput) error {
-	// Create value object
 	productID, err := domain.NewProductID(input.ID)
 	if err != nil {
 		return err
 	}
 
-	// Call domain service to delete product
 	err = uc.productService.DeleteProduct(ctx, productID)
 	if err != nil {
 		if errors.Is(err, domain.ErrProductNotFound) {

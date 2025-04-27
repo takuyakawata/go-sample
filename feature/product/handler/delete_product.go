@@ -5,7 +5,7 @@ import (
 	"sago-sample/api"
 	"strings"
 
-	product "sago-sample/internal/product/usecase"
+	product "sago-sample/feature/product/usecase"
 )
 
 // DeleteProduct handles the deletion of a product

@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	product "sago-sample/internal/product/domain"
+	product "sago-sample/feature/product/domain"
 )
 
 // ProductRepository is an in-memory implementation of the product.Repository interface

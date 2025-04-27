@@ -1,12 +1,11 @@
-// api/product.go
 package main
 
 import (
 	"github.com/go-chi/chi/v5"
 	"net/http"
-	"sago-sample/internal/handler"
-	"sago-sample/internal/product/infrastructure"
-	usecase "sago-sample/internal/product/usecase"
+	"sago-sample/feature/product/handler"
+	"sago-sample/feature/product/infrastructure"
+	usecase "sago-sample/feature/product/usecase"
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {
@@ -44,6 +43,11 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	// Optional: List by category
 	//rtr.Get("/api/categories/{id}/products", hGet.HandleByCategory)
+
+	//hello world
+	rtr.Get("/api/hello", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello, World!"))
+	})
 
 	// 3) エントリポイントにリクエストを渡す
 	rtr.ServeHTTP(w, r)

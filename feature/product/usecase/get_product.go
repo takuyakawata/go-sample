@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	domain "sago-sample/internal/product/domain"
+	domain "sago-sample/feature/product/domain"
 )
 
 type GetProductInput struct {
@@ -97,19 +97,16 @@ func NewGetAllProductsUseCase(repo domain.Repository) *GetAllProductsUseCase {
 
 // Execute runs the use case
 func (uc *GetAllProductsUseCase) Execute(ctx context.Context) (*GetAllProductsOutput, error) {
-	// Call domain service to get all products
 	products, err := uc.repo.FindAll(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	// Map domain entities to output
 	output := &GetAllProductsOutput{
 		Products: make([]ProductOutput, len(products)),
 	}
 
 	for i, p := range products {
-		// Map categories
 		categories := make([]CategoryOutput, 0, len(p.Categories()))
 		for _, c := range p.Categories() {
 			categories = append(categories, CategoryOutput{

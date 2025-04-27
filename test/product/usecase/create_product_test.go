@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	domain "sago-sample/internal/product/domain"
-	usecase "sago-sample/internal/product/usecase"
+	domain "sago-sample/feature/product/domain"
+	usecase "sago-sample/feature/product/usecase"
 )
 
 // We're reusing the MockProductRepository from add_category_to_product_test.go

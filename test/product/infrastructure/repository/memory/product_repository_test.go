@@ -2,13 +2,13 @@ package memory_test
 
 import (
 	"context"
-	"sago-sample/internal/product/infrastructure"
+	"sago-sample/feature/product/infrastructure"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	domain "sago-sample/internal/product/domain"
+	domain "sago-sample/feature/product/domain"
 )
 
 func TestProductRepository_SaveAndFindByID(t *testing.T) {

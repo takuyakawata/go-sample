@@ -7,8 +7,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
-	domain "sago-sample/internal/product/domain"
-	productUseCase "sago-sample/internal/product/usecase"
+	domain "sago-sample/feature/product/domain"
+	productUseCase "sago-sample/feature/product/usecase"
 )
 
 // MockProductRepository is a mock implementation of the domain.Repository interface

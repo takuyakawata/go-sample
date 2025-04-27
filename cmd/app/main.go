@@ -5,9 +5,9 @@ import (
 	"log"
 	"net/http"
 	"sago-sample/api"
-	product "sago-sample/internal/product/domain"
-	"sago-sample/internal/product/infrastructure"
-	productUseCase "sago-sample/internal/product/usecase"
+	product "sago-sample/feature/product/domain"
+	"sago-sample/feature/product/infrastructure"
+	productUseCase "sago-sample/feature/product/usecase"
 )
 
 func main() {

@@ -3,7 +3,7 @@ package product
 import (
 	"context"
 
-	domain "sago-sample/internal/product/domain"
+	domain "sago-sample/feature/product/domain"
 )
 
 // GetProductsByCategoryInput represents the input data for getting products by category
@@ -30,25 +30,21 @@ func NewGetProductsByCategoryUseCase(productService *domain.Service) *GetProduct
 
 // Execute runs the use case
 func (uc *GetProductsByCategoryUseCase) Execute(ctx context.Context, input GetProductsByCategoryInput) (*GetProductsByCategoryOutput, error) {
-	// Create value object
 	categoryID, err := domain.NewCategoryID(input.CategoryID)
 	if err != nil {
 		return nil, err
 	}
 
-	// Call domain service to get products by category
 	products, err := uc.productService.GetProductsByCategory(ctx, categoryID)
 	if err != nil {
 		return nil, err
 	}
 
-	// Map domain entities to output
 	output := &GetProductsByCategoryOutput{
 		Products: make([]ProductOutput, len(products)),
 	}
 
 	for i, p := range products {
-		// Map categories
 		categories := make([]CategoryOutput, 0, len(p.Categories()))
 		for _, c := range p.Categories() {
 			categories = append(categories, CategoryOutput{

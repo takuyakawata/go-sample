@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	domain "sago-sample/internal/product/domain"
+	domain "sago-sample/feature/product/domain"
 )
 
 // CreateProductInput represents the input data for creating a product

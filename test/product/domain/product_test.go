@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	product "sago-sample/internal/product/domain"
+	product "sago-sample/feature/product/domain"
 )
 
 func TestNewProduct(t *testing.T) {

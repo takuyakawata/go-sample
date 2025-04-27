@@ -3,7 +3,7 @@ package query
 import (
 	"context"
 	"gorm.io/gorm"
-	"sago-sample/internal/dao/model"
+	"sago-sample/feature/dao/model"
 )
 
 // ProductDo is a query builder for Product

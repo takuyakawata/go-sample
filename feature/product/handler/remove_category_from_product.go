@@ -2,19 +2,31 @@ package handler
 
 import (
 	"net/http"
+	"sago-sample/api"
 	"strings"
 
-	usecase "sago-sample/internal/product/usecase"
+	product "sago-sample/feature/product/usecase"
 )
 
-func (h *api.ProductHandler) NewGetProductHandler(w http.ResponseWriter, r *http.Request) {
-	id := strings.TrimPrefix(r.URL.Path, "/products/")
-
-	input := usecase.GetProductInput{
-		ID: id,
+// RemoveCategoryFromProduct handles removing a category from a product
+func (h *api.ProductHandler) RemoveCategoryFromProduct(w http.ResponseWriter, r *http.Request) {
+	// Extract product ID and category ID from URL
+	path := strings.TrimPrefix(r.URL.Path, "/products/")
+	parts := strings.Split(path, "/categories/")
+	if len(parts) != 2 {
+		respondWithError(w, http.StatusBadRequest, "Invalid URL format")
+		return
 	}
 
-	output, err := h.getProductUseCase.Execute(r.Context(), input)
+	productID := parts[0]
+	categoryID := parts[1]
+
+	input := product.RemoveCategoryFromProductInput{
+		ProductID:  productID,
+		CategoryID: categoryID,
+	}
+
+	output, err := h.removeCategoryFromProductUseCase.Execute(r.Context(), input)
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") {
 			respondWithError(w, http.StatusNotFound, err.Error())
@@ -34,7 +46,7 @@ func (h *api.ProductHandler) NewGetProductHandler(w http.ResponseWriter, r *http
 	}
 
 	response := ProductResponse{
-		ID:          output.ID,
+		ID:          output.ProductID,
 		Name:        output.Name,
 		Description: output.Description,
 		Price:       output.Price,

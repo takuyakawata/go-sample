@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	domain "sago-sample/internal/product/domain"
+	domain "sago-sample/feature/product/domain"
 )
 
 // AddCategoryToProductInput represents the input data for adding a category to a product

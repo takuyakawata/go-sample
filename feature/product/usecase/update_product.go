@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	domain "sago-sample/internal/product/domain"
+	domain "sago-sample/feature/product/domain"
 )
 
 // UpdateProductInput represents the input data for updating a product
@@ -41,7 +41,6 @@ func NewUpdateProductUseCase(productService *domain.Service) *UpdateProductUseCa
 
 // Execute runs the use case
 func (uc *UpdateProductUseCase) Execute(ctx context.Context, input UpdateProductInput) (*UpdateProductOutput, error) {
-	// Create value objects
 	productID, err := domain.NewProductID(input.ID)
 	if err != nil {
 		return nil, err
@@ -64,7 +63,6 @@ func (uc *UpdateProductUseCase) Execute(ctx context.Context, input UpdateProduct
 
 	stock := domain.NewStock(input.Stock)
 
-	// Call domain service to update product
 	updatedProduct, err := uc.productService.UpdateProduct(ctx, productID, productName, productDescription, price, stock)
 	if err != nil {
 		if errors.Is(err, domain.ErrProductNotFound) {
@@ -73,7 +71,6 @@ func (uc *UpdateProductUseCase) Execute(ctx context.Context, input UpdateProduct
 		return nil, err
 	}
 
-	// Map domain entity to output
 	return &UpdateProductOutput{
 		ID:          updatedProduct.ID().String(),
 		Name:        updatedProduct.Name().String(),
